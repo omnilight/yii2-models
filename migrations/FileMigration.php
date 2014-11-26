@@ -15,7 +15,7 @@ class FileMigration
      * @param Migration $migration
      * @param string $tableName
      */
-    public static function migrate($migration, $tableName = '{{%files}}')
+    public static function migrateUp($migration, $tableName = '{{%files}}')
     {
         $tableOptions = null;
         if ($migration->db->driverName === 'mysql') {
@@ -29,5 +29,14 @@ class FileMigration
             'created_at' => Schema::TYPE_DATETIME,
             'updated_at' => Schema::TYPE_DATETIME,
         ]);
+    }
+
+    /**
+     * @param Migration $migration
+     * @param string $tableName
+     */
+    public static function migrateDown($migration, $tableName = '{{%files}}')
+    {
+        $migration->dropTable($tableName);
     }
 } 

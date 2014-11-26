@@ -16,5 +16,8 @@
     },
     "autoload": {
         "psr-4": { "omnilight\\models\\": "" }
+    },
+    "extra": {
+        "bootstrap": "omnilight\\models\\Bootstrap"
     }
 }
