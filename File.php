@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 /**
@@ -50,8 +51,7 @@ class File extends ActiveRecord
     public function rules()
     {
         return [
-            [['fileUpload'], 'required', 'on' => self::SCENARIO_FILE_UPLOAD],
-            'fileRule' => [['fileUpload'], 'file', 'on' => self::SCENARIO_FILE_UPLOAD],
+            'fileRule' => [['fileUpload'], 'file', 'on' => self::SCENARIO_FILE_UPLOAD, ],
             [['file_size'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['original_name'], 'string', 'max' => 255]
@@ -77,7 +77,8 @@ class File extends ActiveRecord
     {
         if (parent::load($data, $formName)) {
             if ($this->scenario == self::SCENARIO_FILE_UPLOAD) {
-                $this->fileUpload = UploadedFile::getInstance($this, 'fileUpload');
+                if (!($this->fileUpload instanceof UploadedFile))
+                    $this->fileUpload = UploadedFile::getInstance($this, 'fileUpload');
             }
             return true;
         } else {
@@ -102,6 +103,7 @@ class File extends ActiveRecord
     {
         if ($this->scenario == self::SCENARIO_FILE_UPLOAD) {
             $fileName = $this->getFileName();
+            FileHelper::createDirectory(dirname($fileName));
             $this->fileUpload->saveAs($fileName);
         }
         parent::afterSave($insert, $changedAttributes);
