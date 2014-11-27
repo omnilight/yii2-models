@@ -53,7 +53,9 @@ class File extends ActiveRecord
     public function rules()
     {
         return [
-            'fileRule' => [['fileUpload'], 'file', 'on' => self::SCENARIO_FILE_UPLOAD, ],
+            'fileRule' => [['fileUpload'], 'file', 'skipOnEmpty' => false, 'on' => self::SCENARIO_FILE_UPLOAD, 'when' => function() {
+                return $this->isNewRecord;
+            } ],
             [['file_size'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['original_name'], 'string', 'max' => 255]
