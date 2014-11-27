@@ -17,6 +17,8 @@ use yii\web\UploadedFile;
  * @property integer $file_size
  * @property string $created_at
  * @property string $updated_at
+ *
+ * @property string $fileName
  */
 class File extends ActiveRecord
 {
@@ -108,6 +110,13 @@ class File extends ActiveRecord
         }
         parent::afterSave($insert, $changedAttributes);
     }
+
+    public function afterDelete()
+    {
+        @unlink($this->getFileName());
+        parent::afterDelete();
+    }
+
 
     /**
      * @return bool|string
